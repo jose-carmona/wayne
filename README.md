@@ -49,12 +49,12 @@ If you want to learn more about building native executables, please consult http
 
 ## Related Guides
 
-- REST ([guide](https://quarkus.io/guides/rest)): A Jakarta REST implementation utilizing build time processing and Vert.x. This extension is not compatible with the quarkus-resteasy extension, or any of the extensions that depend on it.
+- RESTEasy Classic Qute ([guide](https://quarkus.io/guides/qute)): Qute Templating integration for RESTEasy Classic
 
 ## Provided Code
 
-### REST
+### RESTEasy Qute
 
-Easily start your REST Web Services
+Create your web page using Quarkus RESTEasy & Qute
 
-[Related guide section...](https://quarkus.io/guides/getting-started-reactive#reactive-jax-rs-resources)
+[Related guide section...](https://quarkus.io/guides/qute#type-safe-templates)
