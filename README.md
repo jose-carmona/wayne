@@ -1,8 +1,10 @@
 # qkia
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+This project uses 
 
-If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
+* Quarkus, the Supersonic Subatomic Java Framework.
+* Tailwind CSS
+* HTMX
 
 ## Running the application in dev mode
 
@@ -46,15 +48,3 @@ Or, if you don't have GraalVM installed, you can run the native executable build
 You can then execute your native executable with: `./target/qkia-1.0.0-SNAPSHOT-runner`
 
 If you want to learn more about building native executables, please consult https://quarkus.io/guides/maven-tooling.
-
-## Related Guides
-
-- RESTEasy Classic Qute ([guide](https://quarkus.io/guides/qute)): Qute Templating integration for RESTEasy Classic
-
-## Provided Code
-
-### RESTEasy Qute
-
-Create your web page using Quarkus RESTEasy & Qute
-
-[Related guide section...](https://quarkus.io/guides/qute#type-safe-templates)
