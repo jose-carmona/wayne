@@ -3,14 +3,21 @@
 This project uses 
 
 * Quarkus, the Supersonic Subatomic Java Framework.
-* Tailwind CSS
-* HTMX
+* Tailwind CSS.
+* HTMX.
+* Langchain4J + Quarkus Langchain4J extension.
 
 ## Running the application in dev mode
 
 You can run your application in dev mode that enables live coding using:
 ```shell script
 ./mvnw compile quarkus:dev
+```
+
+Before, you need ollama with llama3 LLM running. 
+
+```shell script
+ollama run llama3:instruct
 ```
 
 > **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at http://localhost:8080/q/dev/.
