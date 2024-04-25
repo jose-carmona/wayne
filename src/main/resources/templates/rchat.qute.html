@@ -6,3 +6,12 @@
     <b>Wayne</b>
     <p>{r}</p>
 </div>
+<div class=""mt-4">
+    <b>{relevant.size} documents:</b>
+</div>
+<div class=""mt-2">
+    {#for item in relevant}
+        <p>{item.score}</p>    
+        <p>{item.embedded.text}</p>    
+    {/for}
+</div>

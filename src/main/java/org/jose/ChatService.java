@@ -11,11 +11,28 @@ import jakarta.ws.rs.core.MediaType;
 
 import static java.util.Objects.requireNonNull;
 
+import java.util.List;
+
+import org.jboss.logging.Logger;
+
+import dev.langchain4j.data.segment.TextSegment;
+import dev.langchain4j.model.embedding.EmbeddingModel;
+import dev.langchain4j.store.embedding.EmbeddingMatch;
+import dev.langchain4j.store.embedding.EmbeddingStore;
+
 @Path("/chat")
 public class ChatService {
 
+    private static final Logger LOG = Logger.getLogger(ChatService.class);
+
     @Inject
     BotService bot;
+
+    @Inject
+    EmbeddingStore store;
+
+    @Inject
+    EmbeddingModel model;
 
     private final Template rchat;
 
@@ -27,8 +44,15 @@ public class ChatService {
     @Produces(MediaType.TEXT_HTML)
     @Blocking
     public TemplateInstance get(@FormParam("q") String q) {
+        List<EmbeddingMatch<TextSegment>> relevant = store.findRelevant(model.embed(q).content(), 3);
+        LOG.info(relevant.size());
+        LOG.info(relevant);
+
         String r = bot.chat(q);
-        return rchat.data("q", q).data("r", r);
+        return rchat
+                .data("relevant", relevant)
+                .data("q", q)
+                .data("r", r);
     }
 
 }
