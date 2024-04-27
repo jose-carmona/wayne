@@ -42,12 +42,14 @@ public class StoreService {
         LOG.info(url);
 
         final Document document = UrlDocumentLoader.load(url, new TextDocumentParser());
+        document.metadata().add("URL", url);
+
         final HtmlTextExtractor transformer = new HtmlTextExtractor(".wpb_wrapper", Map.of("title", "h1.entry-title",
                 "author", ".td-post-author-name", "date", ".td-post-date", "visits", ".td-post-views"), true);
 
         Document transformedDocument = transformer.transform(document);
 
-        DocumentSplitter documentSplitter = DocumentSplitters.recursive(200, 20, new HuggingFaceTokenizer());
+        DocumentSplitter documentSplitter = DocumentSplitters.recursive(400, 20, new HuggingFaceTokenizer());
         
         List<Document> splitDocuments = documentSplitter
                 .split(transformedDocument)
@@ -60,6 +62,12 @@ public class StoreService {
                 .embeddingStore(store)
                 .build()
                 .ingest(splitDocuments);
+
+        EmbeddingStoreIngestor.builder()
+                .embeddingModel(model)
+                .embeddingStore(store)
+                .build()
+                .ingest(transformedDocument);
 
         return"Ingested " + url + " as " + splitDocuments.size() + " documents";
     }

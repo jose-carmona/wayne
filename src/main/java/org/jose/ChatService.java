@@ -44,9 +44,8 @@ public class ChatService {
     @Produces(MediaType.TEXT_HTML)
     @Blocking
     public TemplateInstance get(@FormParam("q") String q) {
-        List<EmbeddingMatch<TextSegment>> relevant = store.findRelevant(model.embed(q).content(), 3);
+        List<EmbeddingMatch<TextSegment>> relevant = store.findRelevant(model.embed(q).content(), 3, .7);
         LOG.info(relevant.size());
-        LOG.info(relevant);
 
         String r = bot.chat(q);
         return rchat

@@ -1,4 +1,6 @@
-# qkia
+# Wayne
+
+![Wayne logo](/src/main/resources/META-INF/resources/images/wayne.png)
 
 This project uses 
 

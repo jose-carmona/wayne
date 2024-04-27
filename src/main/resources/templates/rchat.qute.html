@@ -6,12 +6,13 @@
     <b>Wayne</b>
     <p>{r}</p>
 </div>
-<div class=""mt-4">
+<div class="mt-4">
     <b>{relevant.size} documents:</b>
 </div>
-<div class=""mt-2">
+<div class="mt-2">
     {#for item in relevant}
-        <p>{item.score}</p>    
-        <p>{item.embedded.text}</p>    
+        <p>score: {str:format("%.2f",item.score)}</p>
+        <p>{item.embedded.metadata.get("URL")}</p>    
+        <p>{item.embedded.text}</p>  
     {/for}
 </div>
