@@ -1,5 +1,7 @@
 package org.jose;
 
+import java.nio.file.FileSystems;
+import java.nio.file.PathMatcher;
 import java.util.List;
 import java.util.Map;
 
@@ -7,6 +9,7 @@ import org.jboss.logging.Logger;
 
 import dev.langchain4j.data.document.Document;
 import dev.langchain4j.data.document.DocumentSplitter;
+import dev.langchain4j.data.document.loader.FileSystemDocumentLoader;
 import dev.langchain4j.data.document.loader.UrlDocumentLoader;
 import dev.langchain4j.data.document.parser.TextDocumentParser;
 import dev.langchain4j.data.document.splitter.DocumentSplitters;
@@ -15,7 +18,6 @@ import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.embedding.HuggingFaceTokenizer;
 import dev.langchain4j.store.embedding.EmbeddingStore;
 import dev.langchain4j.store.embedding.EmbeddingStoreIngestor;
-import io.quarkus.logging.Log;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -27,6 +29,7 @@ public class StoreService {
 
     private static final Logger LOG = Logger.getLogger(StoreService.class);
 
+    @SuppressWarnings("rawtypes")
     @Inject
     EmbeddingStore store;
 
@@ -63,12 +66,32 @@ public class StoreService {
                 .build()
                 .ingest(splitDocuments);
 
+        return"Ingested " + url + " as " + splitDocuments.size() + " documents";
+    }
+
+    @Path("/local_ingest")
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public String locall_ingest() {
+
+        PathMatcher pathMatcher = FileSystems.getDefault().getPathMatcher("glob:**");
+        LOG.info("Ingesting documents... ");
+        List<Document> documents = null;
+        documents = FileSystemDocumentLoader.loadDocuments("src/main/resources/docs", pathMatcher);
+        
+        DocumentSplitter documentSplitter = DocumentSplitters.recursive(500,
+                40, new HuggingFaceTokenizer());
+        List<Document> splitDocuments = documentSplitter
+                .splitAll(documents)
+                .stream()
+                .map(split -> new Document(split.text()))
+                .toList();
         EmbeddingStoreIngestor.builder()
                 .embeddingModel(model)
                 .embeddingStore(store)
                 .build()
-                .ingest(transformedDocument);
+                .ingest(splitDocuments);
 
-        return"Ingested " + url + " as " + splitDocuments.size() + " documents";
+        return "Ingested " + documents.size() + " files as " + splitDocuments.size() + " documents";
     }
 }

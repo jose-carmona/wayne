@@ -4,12 +4,15 @@
   <img src="/src/main/resources/META-INF/resources/images/wayne.png" width="480"/>
 </p>
 
+(Wayne logo by [\@Marttuki](https://www.instagram.com/m.art_tuki/))
+
 This project uses 
 
 * Quarkus, the Supersonic Subatomic Java Framework.
 * Tailwind CSS.
 * HTMX.
 * Langchain4J + Quarkus Langchain4J extension.
+
 
 ## Running the application in dev mode
 
@@ -56,6 +59,6 @@ Or, if you don't have GraalVM installed, you can run the native executable build
 ./mvnw package -Dnative -Dquarkus.native.container-build=true
 ```
 
-You can then execute your native executable with: `./target/qkia-1.0.0-SNAPSHOT-runner`
+You can then execute your native executable with: `./target/wayne-1.0.0-SNAPSHOT-runner`
 
 If you want to learn more about building native executables, please consult https://quarkus.io/guides/maven-tooling.

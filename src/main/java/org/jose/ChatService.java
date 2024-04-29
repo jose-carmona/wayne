@@ -28,6 +28,7 @@ public class ChatService {
     @Inject
     BotService bot;
 
+    @SuppressWarnings("rawtypes")
     @Inject
     EmbeddingStore store;
 
@@ -44,6 +45,7 @@ public class ChatService {
     @Produces(MediaType.TEXT_HTML)
     @Blocking
     public TemplateInstance get(@FormParam("q") String q) {
+        @SuppressWarnings("unchecked")
         List<EmbeddingMatch<TextSegment>> relevant = store.findRelevant(model.embed(q).content(), 3, .7);
         LOG.info(relevant.size());
 

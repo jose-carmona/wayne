@@ -11,8 +11,7 @@
 </div>
 <div class="mt-2">
     {#for item in relevant}
-        <p>score: {str:format("%.2f",item.score)}</p>
-        <p>{item.embedded.metadata.get("URL")}</p>    
-        <p>{item.embedded.text}</p>  
+        <p>score: {str:format("%.2f",item.score)}. URL: {item.embedded.metadata.get("URL")}</p>    
+        <p class="text-sm">{item.embedded.text}</p>  
     {/for}
 </div>
