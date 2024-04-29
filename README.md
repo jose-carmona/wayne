@@ -1,6 +1,8 @@
 # Wayne
 
-![Wayne logo](/src/main/resources/META-INF/resources/images/wayne.png)
+<p align="center">
+  <img src="/src/main/resources/META-INF/resources/images/wayne.png" width="480"/>
+</p>
 
 This project uses 
 
