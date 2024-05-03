@@ -1,5 +1,7 @@
 # Wayne
 
+Wayne is simply a basic bot with RAG, designed to learn about Quarkus, Langchain4j, LLMs, vector databases, etc.
+
 <p align="center">
   <img src="/src/main/resources/META-INF/resources/images/wayne.png" width="480"/>
 </p>
@@ -9,10 +11,9 @@
 This project uses 
 
 * Quarkus, the Supersonic Subatomic Java Framework.
-* Tailwind CSS.
-* HTMX.
 * Langchain4J + Quarkus Langchain4J extension.
-
+* Chroma DB as vector database.
+* HTMX + Tailwind to develop a straightforward and efficient web interface.
 
 ## Running the application in dev mode
 
@@ -21,7 +22,7 @@ You can run your application in dev mode that enables live coding using:
 ./mvnw compile quarkus:dev
 ```
 
-Before, you need ollama with llama3 LLM running. 
+Before, you need to have llama3 LLM running on Ollama.
 
 ```shell script
 ollama run llama3:instruct

@@ -2,9 +2,11 @@ package org.jose;
 
 import java.nio.file.FileSystems;
 import java.nio.file.PathMatcher;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.jboss.logging.Logger;
 
 import dev.langchain4j.data.document.Document;
@@ -35,44 +37,47 @@ public class StoreService {
 
     @Inject
     EmbeddingModel model;
+
+    @ConfigProperty(name = "org.jose.ingest.url")
+    List<String> ingest_urls;
     
     @Path("/ingest")
     @GET
     @Produces(MediaType.TEXT_PLAIN)
-    public String test() {
+    public String url_ingest() {
 
-        final String url = "https://visitpuentegenil.es/roman-villa-of-fuente-alamo/";
-        LOG.info(url);
+        final HtmlTextExtractor transformer = new HtmlTextExtractor("article", Map.of("title", "h1.page-header-title"), true);
 
-        final Document document = UrlDocumentLoader.load(url, new TextDocumentParser());
-        document.metadata().add("URL", url);
+        List<Document> transformedDocuments = new ArrayList<>();
 
-        final HtmlTextExtractor transformer = new HtmlTextExtractor(".wpb_wrapper", Map.of("title", "h1.entry-title",
-                "author", ".td-post-author-name", "date", ".td-post-date", "visits", ".td-post-views"), true);
-
-        Document transformedDocument = transformer.transform(document);
+        for (String url : ingest_urls) {
+            LOG.info("Ingesting " + url);
+            transformedDocuments.add(transformer.transform(UrlDocumentLoader.load(url, new TextDocumentParser())));
+        }
 
         DocumentSplitter documentSplitter = DocumentSplitters.recursive(400, 20, new HuggingFaceTokenizer());
         
+        LOG.info("Splitting...");
         List<Document> splitDocuments = documentSplitter
-                .split(transformedDocument)
+                .splitAll(transformedDocuments)
                 .stream()
-                .map(split -> new Document(split.text()))
+                .map(split -> new Document(split.text(), split.metadata()))
                 .toList();
         
+        LOG.info("Storing...");
         EmbeddingStoreIngestor.builder()
                 .embeddingModel(model)
                 .embeddingStore(store)
                 .build()
                 .ingest(splitDocuments);
 
-        return"Ingested " + url + " as " + splitDocuments.size() + " documents";
+        return"Ingested " + ingest_urls.size() + " URLs as " + splitDocuments.size() + " documents";
     }
 
     @Path("/local_ingest")
     @GET
     @Produces(MediaType.TEXT_PLAIN)
-    public String locall_ingest() {
+    public String local_ingest() {
 
         PathMatcher pathMatcher = FileSystems.getDefault().getPathMatcher("glob:**");
         LOG.info("Ingesting documents... ");
